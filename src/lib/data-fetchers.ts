@@ -27,6 +27,21 @@ import {
   type Notification
 } from './mock-data'
 
+export type {
+  Profile,
+  Subject,
+  Chapter,
+  Topic,
+  Note,
+  Assignment,
+  ClassSession,
+  StudentProgress,
+  Lead,
+  Invoice,
+  StudentMentorLink,
+  Notification
+}
+
 // Helper to determine if we are running in a mock environment (e.g. placeholder environment variables)
 function isMockEnv(): boolean {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
