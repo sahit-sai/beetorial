@@ -6,6 +6,20 @@ function isMockEnv(): boolean {
   return !url || !key || url.includes('mockproject.supabase.co') || key === 'mockanonkey'
 }
 
+function getSupabaseCredentials() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!url) {
+    throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL')
+  }
+  if (!key) {
+    throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_ANON_KEY')
+  }
+
+  return { url, key }
+}
+
 function getCookie(name: string): string | null {
   if (typeof document === 'undefined') return null
   const value = `; ${document.cookie}`
@@ -15,10 +29,8 @@ function getCookie(name: string): string | null {
 }
 
 export function createClient() {
-  const client = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const { url, key } = getSupabaseCredentials()
+  const client = createBrowserClient(url, key)
 
   if (isMockEnv()) {
     const authOverride = {
