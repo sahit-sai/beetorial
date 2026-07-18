@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
@@ -90,6 +90,23 @@ const MOCK_ATTENDANCE = [
 
 export default function StudentReportsPage() {
   const [activeSubject, setActiveSubject] = useState<string>('sub-math')
+  const [backLink, setBackLink] = useState('/student')
+
+  useEffect(() => {
+    async function checkRole() {
+      const { createClient } = await import('@/utils/supabase/client')
+      const { getProfileById } = await import('@/lib/data-fetchers')
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const profile = await getProfileById(user.id)
+        if (profile) {
+          setBackLink(`/${profile.role}`)
+        }
+      }
+    }
+    checkRole()
+  }, [])
 
   // Calculate syllabus completion percentage
   const calculateSubjectProgress = (subj: SubjectItem) => {
@@ -120,7 +137,7 @@ export default function StudentReportsPage() {
               </span>
             </div>
           </div>
-          <Link href="/student">
+          <Link href={backLink}>
             <Button variant="ghost" size="sm" className="rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-heading font-bold">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home

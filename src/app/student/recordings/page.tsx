@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
@@ -43,6 +43,23 @@ const MOCK_RECORDINGS: PastRecording[] = [
 
 export default function StudentRecordingsPage() {
   const [activeRecording, setActiveRecording] = useState<PastRecording | null>(null)
+  const [backLink, setBackLink] = useState('/student')
+
+  useEffect(() => {
+    async function checkRole() {
+      const { createClient } = await import('@/utils/supabase/client')
+      const { getProfileById } = await import('@/lib/data-fetchers')
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const profile = await getProfileById(user.id)
+        if (profile) {
+          setBackLink(`/${profile.role}`)
+        }
+      }
+    }
+    checkRole()
+  }, [])
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-[#070710] dark:text-slate-100 flex flex-col">
@@ -60,12 +77,12 @@ export default function StudentRecordingsPage() {
               </span>
             </div>
           </div>
-          <a href="/student">
+          <Link href={backLink}>
             <Button variant="ghost" size="sm" className="rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-heading font-bold">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
-          </a>
+          </Link>
         </div>
       </header>
 

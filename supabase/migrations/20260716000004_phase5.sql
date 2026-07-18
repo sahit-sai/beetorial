@@ -38,7 +38,7 @@ CREATE POLICY "Allow users to read linked notepad"
     ON public.shared_notepad FOR SELECT
     TO authenticated
     USING (student_id = auth.uid() OR mentor_id = auth.uid() OR EXISTS (
-        SELECT 1 FROM public.parent_student_links
+        SELECT 1 FROM public.parent_student
         WHERE parent_id = auth.uid() AND student_id = shared_notepad.student_id
     ));
 
@@ -66,7 +66,7 @@ CREATE POLICY "Allow users to view shared uploads"
     ON public.uploaded_files FOR SELECT
     TO authenticated
     USING (student_id = auth.uid() OR mentor_id = auth.uid() OR EXISTS (
-        SELECT 1 FROM public.parent_student_links
+        SELECT 1 FROM public.parent_student
         WHERE parent_id = auth.uid() AND student_id = uploaded_files.student_id
     ));
 

@@ -27,7 +27,8 @@ import {
   Eye, 
   Clock,
   ShieldCheck,
-  TrendingUp
+  TrendingUp,
+  Film
 } from 'lucide-react'
 
 export default async function ParentDashboard() {
@@ -86,6 +87,13 @@ export default async function ParentDashboard() {
           >
             <TrendingUp className="w-4 h-4" />
             Detailed Reports Mirror
+          </Link>
+          <Link 
+            href="/student/recordings" 
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/50 dark:hover:text-slate-100 font-heading font-semibold text-sm transition-all duration-200"
+          >
+            <Film className="w-4 h-4" />
+            Class Recordings Mirror
           </Link>
         </div>
 

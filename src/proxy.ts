@@ -96,8 +96,12 @@ export async function proxy(request: NextRequest) {
 
     // Redirect if they try to access another role's dashboard area
     if (path.startsWith('/student') && role !== 'student') {
-      url.pathname = `/${role}`
-      return NextResponse.redirect(url)
+      // Allow parents to view student reports and recordings
+      const isAllowedParentRoute = role === 'parent' && (path === '/student/reports' || path === '/student/recordings')
+      if (!isAllowedParentRoute) {
+        url.pathname = `/${role}`
+        return NextResponse.redirect(url)
+      }
     }
     if (path.startsWith('/parent') && role !== 'parent') {
       url.pathname = `/${role}`
